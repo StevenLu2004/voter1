@@ -7,7 +7,8 @@ const wordBlackList = [
     [/(f)(a|u)ck/ig, '$1***'],
     [/(f)(a|u)(c|k|q)/ig, '$1**'],
     [/(n)igg\w*/ig, '$1*****'],
-    [/(s)hite?/ig, '$1h**']
+    [/(sh)ite?/ig, '$1**'],
+    [/(sl)ut/ig, '$1**']
 ];
 
 var fixText = function (text) {
