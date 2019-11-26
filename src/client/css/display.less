@@ -1,0 +1,187 @@
+/* Chrome, Safari and Opera syntax */
+:-webkit-full-screen {
+    background-color: #fff;
+}
+
+/* Firefox syntax */
+:-moz-full-screen {
+    background-color: #fff;
+}
+
+/* IE/Edge syntax */
+:-ms-fullscreen {
+    background-color: #fff;
+}
+
+/* Standard syntax */
+:fullscreen {
+    background-color: #fff;
+}
+
+body {
+    background-color: #fff;
+}
+
+.display-container {
+    width: 100vw;
+    max-width: 10in;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: .2in;
+    position: fixed;
+    left: 50vw;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16pt;
+    letter-spacing: .06ch;
+    #prompt {
+        text-align: center;
+        font-size: 120%;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    #team-title-container {
+        display: flex;
+        flex-direction: row;
+        min-height: .4in;
+        line-height: .4in;
+        div {
+            flex: 1;
+            &#team1-title {
+                text-align: left;
+            }
+            &#team2-title {
+                text-align: right;
+            }
+        }
+    }
+    #score-and-comments {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        #h-scoreboard {
+            min-height: .5in;
+            line-height: .5in;
+            display: flex;
+            flex-direction: row;
+            #team1-h-score,#team2-h-score {
+                flex-basis: .7in;
+                text-align: center;
+                font-size: 120%;
+            }
+            #team1-h-score {
+                color: rgb(22, 168, 255);
+            }
+            #team2-h-score {
+                color: rgb(255, 168, 22);
+            }
+            #score-splitter {
+                flex: 1;
+                display: flex;
+                flex-direction: row;
+                div {
+                    height: 100%;
+                    // margin: 4pt;
+                    transition: all .2s ease;
+                    &#team1-h-rect {
+                        border-radius: .1in 0 0 .1in;
+                        background-color: rgb(22, 168, 255);
+                    }
+                    &#team2-h-rect {
+                        border-radius: 0 .1in .1in 0;
+                        background-color: rgb(255, 168, 22);
+                    }
+                    &#h-rect-divider {
+                        flex-basis: 2pt;
+                    }
+                }
+            }
+        }
+        #v-scoreboard {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            .v-scoreboards {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                flex-basis: .7in;
+                flex-shrink: 0;
+                .v-sc-rects {
+                    width: 100%;
+                    border-radius: .1in;
+                    // margin: 4pt;
+                    transition: all .2s ease;
+                }
+                .v-sc-txt {
+                    flex-basis: .5in;
+                    line-height: .5in;
+                    text-align: center;
+                    font-size: 120%;
+                }
+            }
+            #l-scoreboard {
+                #team1-v-rect {
+                    background-color: rgb(22, 168, 255);
+                }
+                #team1-v-score {
+                    color: rgb(22, 168, 255);
+                }
+            }
+            #r-scoreboard {
+                #team2-v-rect {
+                    background-color: rgb(255, 168, 22);
+                }
+                #team2-v-score {
+                    color: rgb(255, 168, 22);
+                }
+            }
+            #comment-area {
+                flex-grow: 1;
+                flex-shrink: 1;
+                padding: .3in;
+                // font-size: 80%;
+                font-weight: 100;
+                overflow: hidden;
+                p {
+                    margin: 0 auto;
+                    width: 100%;
+                    border-bottom: solid 2px #ccc;
+                    padding: .12in;
+                    box-sizing: border-box;
+                    word-wrap: break-word;
+                    word-break: break-all;
+                    hyphens: auto;
+                    opacity: .3;
+                    &:nth-child(1) {
+                        opacity: 1;
+                    }
+                    &:nth-child(2) {
+                        opacity: .7;
+                    }
+                    &:nth-child(3) {
+                        opacity: .6;
+                    }
+                    &:nth-child(4) {
+                        opacity: .5;
+                    }
+                    &:nth-child(5) {
+                        opacity: .4;
+                    }
+                    &:last-child {
+                        border: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+#ideal-container {
+    z-index: -1;
+}

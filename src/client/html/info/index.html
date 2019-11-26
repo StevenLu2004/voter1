@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0" />
+        <title>Info</title>
+    </head>
+    <body>
+        <form action="/genToken" method="POST">
+            <input type="submit" value="Generate authorization token" /><br>
+            If you are the <code>localhost</code>, you won't need to generate a token.
+        </form>
+        <form action="/setInfo" method="POST" enctype="multipart/form-data">
+            <table>
+                <tbody>
+                    <tr style="display: flex; flex-direction: row;">
+                        <td>Token: </td>
+                        <td style="flex: 1;">
+                            <input type="text" name="token" style="width: 100%;" />
+                        </td>
+                    </tr>
+                    <tr style="display: flex; flex-direction: row;">
+                        <td>Prompt: </td>
+                        <td style="flex: 1;">
+                            <input type="text" name="prompt" value="To be or not to be" style="width: 100%;" />
+                        </td>
+                    </tr>
+                    <tr style="display: flex; flex-direction: row;">
+                        <td>Team 1: </td>
+                        <td style="flex: 1;">
+                            <input type="text" name="t1ttl" value="To be" style="width: 100%;" />
+                        </td>
+                    </tr>
+                    <tr style="display: flex; flex-direction: row;">
+                        <td>Team 2: </td>
+                        <td style="flex: 1;">
+                            <input type="text" name="t2ttl" value="Not to be" style="width: 100%;" />
+                        </td>
+                    </tr>
+                    <tr style="display: flex; flex-direction: row;">
+                        <td colspan="2" style="flex: 1;">
+                            <input type="submit" value="Set" style="width: 100%;" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </body>
+</html>

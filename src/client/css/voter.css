@@ -1,0 +1,123 @@
+/* Chrome, Safari and Opera syntax */
+:-webkit-full-screen {
+  background-color: #fff;
+}
+/* Firefox syntax */
+:-moz-full-screen {
+  background-color: #fff;
+}
+/* IE/Edge syntax */
+:-ms-fullscreen {
+  background-color: #fff;
+}
+/* Standard syntax */
+:fullscreen {
+  background-color: #fff;
+}
+body {
+  background-color: #fff;
+}
+#vote-container {
+  display: block;
+  width: fit-content;
+  position: fixed;
+  left: 50vw;
+  top: 50vh;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  text-align: center;
+}
+#vote-container .team-selection {
+  max-width: 4in;
+  width: 100vw;
+  max-height: 2in;
+  height: 50vw;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+#vote-container .team-selection button {
+  box-sizing: border-box;
+  margin-top: 4%;
+  margin-bottom: 4%;
+  padding: 0;
+  flex-grow: 1;
+  border: 0.04in solid;
+  border-radius: 0.1in;
+  background-color: white;
+  outline: none;
+}
+#vote-container .team-selection button#team1 {
+  margin-right: 2%;
+  margin-left: 6%;
+  border-color: #16a8ff;
+  background-color: #d0eeff;
+}
+#vote-container .team-selection button#team1.selected {
+  background-color: #16a8ff;
+}
+#vote-container .team-selection button#team2 {
+  margin-left: 2%;
+  margin-right: 6%;
+  border-color: #ffa816;
+  background-color: #ffeed0;
+}
+#vote-container .team-selection button#team2.selected {
+  background-color: #ffa816;
+}
+#vote-container .team-selection button[disabled] {
+  opacity: 0.5;
+}
+#vote-container .comment-area {
+  max-width: 4in;
+  width: 100vw;
+}
+#vote-container .comment-area .comment-text {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+#vote-container .comment-area .comment-text textarea {
+  display: block;
+  resize: none;
+  width: 100%;
+  margin: 0;
+  margin-block: 0;
+  margin-inline: 0;
+  padding: 0;
+  padding-block: 0;
+  padding-inline: 0;
+  border-radius: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 16px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 0.04in solid #393;
+  background-color: #fff;
+  outline: none;
+}
+#vote-container .comment-area .comment-text textarea[disabled] {
+  opacity: 0.5;
+}
+#vote-container .comment-area .comment-submit {
+  width: 0.4in;
+  height: 0.4in;
+  line-height: 0.4in;
+  border: none;
+  background: none;
+  outline: none;
+  opacity: 0.8;
+}
+#vote-container .comment-area .comment-submit:active {
+  opacity: 1;
+}
+#vote-container .comment-area .comment-submit img {
+  width: 100%;
+}
+#vote-container .comment-area .comment-submit[disabled] {
+  opacity: 0.5;
+}

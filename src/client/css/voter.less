@@ -1,0 +1,131 @@
+/* Chrome, Safari and Opera syntax */
+:-webkit-full-screen {
+    background-color: #fff;
+}
+
+/* Firefox syntax */
+:-moz-full-screen {
+    background-color: #fff;
+}
+
+/* IE/Edge syntax */
+:-ms-fullscreen {
+    background-color: #fff;
+}
+
+/* Standard syntax */
+:fullscreen {
+    background-color: #fff;
+}
+
+body {
+    background-color: #fff;
+}
+
+#vote-container {
+    display: block;
+    width: fit-content;
+    position: fixed;
+    left: 50vw;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    text-align: center;
+    .team-selection {
+        max-width: 4in;
+        width: 100vw;
+        max-height: 2in;
+        height: 50vw;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        button {
+            @color1: rgb(22, 168, 255);
+            @color2: rgb(255, 168, 22);
+            box-sizing: border-box;
+            // margin: 5%; // Doesn't have to be uniform
+            margin-top: 4%;
+            margin-bottom: 4%;
+            padding: 0;
+            flex-grow: 1;
+            border: .04in solid;
+            border-radius: .1in;
+            background-color: white;
+            outline: none;
+            &#team1 {
+                margin-right: 2%;
+                margin-left: 6%;
+                border-color: @color1;
+                background-color: mix(@color1, #fff, 20%);
+                &.selected {
+                    background-color: @color1;
+                }
+            }
+            &#team2 {
+                margin-left: 2%;
+                margin-right: 6%;
+                border-color: @color2;
+                background-color: mix(@color2, #fff, 20%);
+                &.selected {
+                    background-color: @color2;
+                }
+            }
+            &[disabled] {
+                opacity: 0.5;
+            }
+        }
+    }
+    .comment-area {
+        max-width: 4in;
+        width: 100vw;
+        .comment-text {
+            margin-left: 10%;
+            margin-right: 10%;
+            textarea {
+                display: block;
+                resize: none;
+                width: 100%;
+                margin: 0;
+                margin-block: 0;
+                margin-inline: 0;
+                padding: 0;
+                padding-block: 0;
+                padding-inline: 0;
+                border-radius: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 16px;
+                line-height: 16px;
+                border-top: none;
+                border-left: none;
+                border-right: none;
+                border-bottom: .04in solid #393;
+                background-color: #fff;
+                outline: none;
+                &[disabled] {
+                    opacity: 0.5;
+                }
+            }
+        }
+        .comment-submit {
+            width: .4in;
+            height: .4in;
+            line-height: .4in;
+            border: none;
+            background: none;
+            outline: none;
+            opacity: .8;
+            &:active {
+                opacity: 1;
+            }
+            img {
+                width: 100%;
+            }
+            &[disabled] {
+                opacity: 0.5;
+            }
+        }
+    }
+}
