@@ -1,5 +1,7 @@
 import io from '../../node_modules/socket.io-client/dist/socket.io';
 
+import URL_VARS from './urlvars';
+
 import './css/voter.css';
 import './css/display.css';
 
@@ -159,7 +161,7 @@ var chooseTeam1 = function () {
     btn1.classList.add('selected');
     btn1.onclick = () => {
         if (btnPaused) return;
-        sock.emit('select', 0);
+        sock.emit('select', URL_VARS.old ? 0 : -1);
         pauseButtons();
     };
     btn2.classList.remove('selected');
@@ -179,7 +181,7 @@ var chooseTeam2 = function () {
     btn2.classList.add('selected');
     btn2.onclick = () => {
         if (btnPaused) return;
-        sock.emit('select', 0);
+        sock.emit('select', URL_VARS.old ? 0 : 1);
         pauseButtons();
     };
 };
@@ -263,11 +265,14 @@ var initDisplay = function () {
             var p = document.createElement('p');
             p.innerText = txt;
             this.commentArea.prepend(p);
+        },
+        deleteOldComments: function () {
             var plst = this.commentArea.childNodes;
             while (this.displayContainer.scrollHeight > this.idealContainer.scrollHeight)
                 this.commentArea.removeChild(plst[plst.length - 1]); // Pop from back
-        }
+        },
     };
+    comments.deleteInterval = window.setInterval(comments.deleteOldComments, 20); // More stable deletion, doesn't crash in css animation
     sock = io('/displays');
     sock.on('connect', () => {
         sock.emit('request-update');

@@ -10,6 +10,7 @@ const Multer = require('multer');
 
 // Import custom modules
 const { fixText } = require('./textFixer');
+require('./iplookup');
 
 // Initialize server
 const app = Express();
