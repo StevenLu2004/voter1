@@ -17,6 +17,20 @@
 body {
   background-color: #fff;
 }
+@keyframes comment-pop {
+  0% {
+    color: #fff;
+    line-height: 1em;
+  }
+  50% {
+    color: #000;
+    line-height: 2.2em;
+  }
+  100% {
+    color: #000;
+    line-height: 2em;
+  }
+}
 .display-container {
   width: 100vw;
   max-width: 10in;
@@ -144,13 +158,16 @@ body {
 .display-container #score-and-comments #v-scoreboard #comment-area p {
   margin: 0 auto;
   width: 100%;
+  line-height: 2em;
   border-bottom: solid 2px #ccc;
-  padding: 0.12in;
   box-sizing: border-box;
   word-wrap: break-word;
   word-break: break-all;
   hyphens: auto;
   opacity: 0.3;
+  animation-name: comment-pop;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-out;
 }
 .display-container #score-and-comments #v-scoreboard #comment-area p:nth-child(1) {
   opacity: 1;

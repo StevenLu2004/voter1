@@ -21,7 +21,6 @@
     "shortid": "^2.2.14",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
-    "terser-webpack-plugin": "^2.2.1",
     "throttle-debounce": "^2.1.0",
     "webpack": "^4.30.0",
     "webpack-dev-middleware": "^3.6.2"
@@ -37,8 +36,9 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.2",
     "mini-css-extract-plugin": "^0.6.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "terser-webpack-plugin": "^2.3.2",
     "webpack-cli": "^3.3.0",
-    "webpack-merge": "^4.2.1"
+    "webpack-merge": "^4.2.2"
   }
 }

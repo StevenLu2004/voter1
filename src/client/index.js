@@ -52,6 +52,15 @@ var leaveComment = function (e) {
     pauseComment();
 };
 
+var commentTextEnterDetection = function (e) {
+    var k = e.keyCode;
+    if (k == 13)
+        window.setTimeout(() => {
+            text.m_resize();
+            leaveComment(e);
+        }, 1);
+}
+
 var initVoterCommentAutoresize = function () {
     text.m_resize = function () {
         text.value = text.value.replace(/\r?\n/g, '').replace(/\t/g, ''); // No new line, no tabs
@@ -80,6 +89,7 @@ var initVoterComment = function () {
     initVoterCommentAutoresize();
     form = document.getElementById('comment-form');
     observe(form, 'submit', leaveComment);
+    observe(text, 'keydown', commentTextEnterDetection);
 };
 
 var initVoterButtons = function () {
@@ -210,8 +220,10 @@ var initDisplay = function () {
         t1Rect: document.getElementById('team1-h-rect'),
         t2Rect: document.getElementById('team2-h-rect'),
         updateScore: function (t1sc, t2sc) {
-            this.t1Score.innerText = String(Math.round(t1sc * 100 / (t1sc + t2sc))) + '%';
-            this.t2Score.innerText = String(Math.round(t2sc * 100 / (t1sc + t2sc))) + '%';
+            // this.t1Score.innerText = String(Math.round(t1sc * 100 / (t1sc + t2sc))) + '%';
+            // this.t2Score.innerText = String(Math.round(t2sc * 100 / (t1sc + t2sc))) + '%';
+            this.t1Score.innerText = t1sc;
+            this.t2Score.innerText = t2sc;
             this.t1Rect.style.flex = t1sc;
             this.t2Rect.style.flex = t2sc;
         }
@@ -221,8 +233,10 @@ var initDisplay = function () {
         t1Rect: document.getElementById('team1-v-rect'),
         t2Rect: document.getElementById('team1-v-space'),
         updateScore: function (t1sc, t2sc) {
-            this.t1Score.innerText = String(Math.round(t1sc * 100 / (t1sc + t2sc))) + '%';
-            // this.t2Score.innerText = String(Math.round(t2sc * 100 / (t1sc + t2sc))) + '%';
+            // this.t1Score.innerText = String(Math.round(t1sc * 100 / (t1sc + t2sc))) + '%';
+            // // this.t2Score.innerText = String(Math.round(t2sc * 100 / (t1sc + t2sc))) + '%';
+            this.t1Score.innerText = t1sc;
+            // this.t2Score.innerText = t2sc;
             this.t1Rect.style.flex = t1sc;
             this.t2Rect.style.flex = t2sc;
         }
@@ -232,8 +246,10 @@ var initDisplay = function () {
         t1Rect: document.getElementById('team2-v-space'),
         t2Rect: document.getElementById('team2-v-rect'),
         updateScore: function (t1sc, t2sc) {
-            // this.t1Score.innerText = String(Math.round(t1sc * 100 / (t1sc + t2sc))) + '%';
-            this.t2Score.innerText = String(Math.round(t2sc * 100 / (t1sc + t2sc))) + '%';
+            // // this.t1Score.innerText = String(Math.round(t1sc * 100 / (t1sc + t2sc))) + '%';
+            // this.t2Score.innerText = String(Math.round(t2sc * 100 / (t1sc + t2sc))) + '%';
+            // this.t1Score.innerText = t1sc;
+            this.t2Score.innerText = t2sc;
             this.t1Rect.style.flex = t1sc;
             this.t2Rect.style.flex = t2sc;
         }

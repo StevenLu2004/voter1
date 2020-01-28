@@ -22,6 +22,12 @@ body {
     background-color: #fff;
 }
 
+@keyframes comment-pop {
+    0% {color: #fff; line-height: 1em;}
+    50% {color: #000; line-height: 2.2em;}
+    100% {color: #000; line-height: 2em;}
+}
+
 .display-container {
     width: 100vw;
     max-width: 10in;
@@ -151,13 +157,17 @@ body {
                 p {
                     margin: 0 auto;
                     width: 100%;
+                    line-height: 2em;
                     border-bottom: solid 2px #ccc;
-                    padding: .12in;
+                    // padding: .12in;
                     box-sizing: border-box;
                     word-wrap: break-word;
                     word-break: break-all;
                     hyphens: auto;
                     opacity: .3;
+                    animation-name: comment-pop;
+                    animation-duration: .4s;
+                    animation-timing-function: ease-out;
                     &:nth-child(1) {
                         opacity: 1;
                     }
