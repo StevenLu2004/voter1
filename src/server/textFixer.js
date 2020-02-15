@@ -11,7 +11,20 @@ const wordBlackList = [
     [/(sl)ut/ig, '$1**']
 ];
 
-var fixText = function (text) {
+if (typeof (String.prototype.trim) === "undefined") {
+    String.prototype.trim = function () {
+        return String(this).replace(/^\s+|\s+$/g, '');
+    };
+}
+
+var fixText = function (text, sock = null) {
+    // Trim text
+    text = text.trim();
+    // Tackle long comments
+    if (text.length > 400) {
+        text = `${sock ? sock.handshake.address : 'ERR_USER_ID'} commented ${text.length} characters`;
+        // console.dir(sock.handshake.address);
+    }
     // Remove bad words
     for (var i = 0; i < wordBlackList.length; i++) {
         text = text.replace(wordBlackList[i][0], wordBlackList[i][1]);
@@ -20,5 +33,5 @@ var fixText = function (text) {
 };
 
 module.exports = {
-    fixText: fixText
+    fixText: fixText,
 };

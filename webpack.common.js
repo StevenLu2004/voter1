@@ -51,5 +51,9 @@ module.exports = {
             filename: 'info/index.html',
             template: 'src/client/html/info/index.html',
         }),
+        new HtmlWebpackPlugin({
+            filename: 'reject.html',
+            template: 'src/client/html/reject.html',
+        }),
     ],
 };

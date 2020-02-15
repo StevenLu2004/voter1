@@ -11,6 +11,8 @@ const Multer = require('multer');
 // Import custom modules
 const { fixText } = require('./textFixer');
 require('./iplookup');
+const IdMgr = require('./idmgr');
+console.log(`The current runtime is ${IdMgr.THIS_RUN_TIME}`);
 
 // Initialize server
 const app = Express();
@@ -49,59 +51,90 @@ var recountVotes = () => {
 // Process voters (namespace)
 const voters = io.of('/voters');
 let voterPile = {}; // Store sockets and votes
-let prevSock = null;
+let voterSocks = {}; // Which socket.id's are real voters
 
 voters.on('connection', (sock) => {
-    console.log(sock === prevSock);
-    prevSock = sock;
-    voterPile[sock.id] = {
-        sock: sock.id,
-        vote: 0 // 0 is neutral, <0 is team 1, >0 is team2
-    };
-    sock.on('ready-to-send', () => {
-        sock.emit('ready-to-receive');
-        // Log
-        console.log(`Voter ${sock.id} is ready`);
+    sock.on('ready-to-send', (voterID, prevConnect) => {
+        voterID = IdMgr.idConnect(sock, voterID, prevConnect);
+        if (voterID > 0) {
+            if (!voterPile[voterID]) // Create if non-existing
+                voterPile[voterID] = { // Now accessed with voter ID
+                    vote: 0, // 0 is neutral, <0 is team 1, >0 is team2
+                    recentCommentTimestamp: [], // series of Date valueOf values // TODO: block spam comments
+                };
+            sock.emit('ready-to-receive', voterID, IdMgr.THIS_RUN_TIME); // Pass back new voter ID // TODO: accept new voter ID in client
+            sock.emit('confirm-selection', voterPile[voterID].vote);
+            voterSocks[sock.id] = 1;
+            // Log
+            console.log(`Voter ${sock.handshake.address} ${voterID} is ready`);
+        } else {
+            sock.emit('ip-or-id-rejected'); // TODO: handle rejection in client
+            console.log(`Voter ${sock.handshake.address} ${voterID} rejected for preexisting ${(voterID == -1) ? 'ID' : 'IP'}`);
+        }
     });
-    sock.on('select', (side) => {
-        voterPile[sock.id].vote = side ? ((side > 0) ? 1 : -1) : 0;
+    sock.on('select', (voterID, side) => {
+        var voterID_ = IdMgr.getId(sock.handshake.address);
+        if (!voterSocks[sock.id]) {
+            console.log("Improper socket.")
+            sock.emit('ip-or-id-rejected');
+            return;
+        }
+        if (!voterID_) {
+            console.log("ID not found.")
+            sock.emit('ip-or-id-rejected');
+            return;
+        }
+        if (voterID != voterID_) {
+            console.log("ID not match.")
+            sock.emit('ip-or-id-rejected');
+            return;
+        }
+        voterPile[voterID].vote = side ? ((side > 0) ? 1 : -1) : 0;
         recountVotes();
         // Confirm socket
-        sock.emit('confirm-selection', voterPile[sock.id].vote);
+        sock.emit('confirm-selection', voterPile[voterID].vote);
         // Update displays
         displays.emit('update-votes', team1Votes, team2Votes);
         // Log
-        console.log(`Voter ${sock.id} chose ${side}\n${printVotes()}`);
+        console.log(`Voter ${sock.handshake.address} ${voterID} chose ${side}\n${printVotes()}`);
     });
-    sock.on('comment', (txt) => {
-        txt = fixText(txt);
+    sock.on('comment', (voterID, txt) => {
+        var voterID_ = IdMgr.getId(sock.handshake.address);
+        if (!voterSocks[sock.id]) {
+            console.log("Improper socket.")
+            sock.emit('ip-or-id-rejected');
+            return;
+        }
+        if (!voterID_) {
+            console.log("ID not found.")
+            sock.emit('ip-or-id-rejected');
+            return;
+        }
+        if (voterID != voterID_) {
+            console.log("ID not match.")
+            sock.emit('ip-or-id-rejected');
+            return;
+        }
+        txt = fixText(txt, sock);
         sock.emit('confirm-comment', txt);
         if (txt && txt !== '') {
             displays.emit('add-comment', txt);
-            console.log(`Voter ${sock.id} commented '${txt}'`);
+            console.log(`Voter ${sock.handshake.address} ${voterID} commented '${txt}'`);
         } else {
-            console.log(`Voter ${sock.id} commented empty comment`);
+            console.log(`Voter ${sock.handshake.address} ${voterID} commented empty comment`);
         }
     });
     sock.on('disconnect', () => {
-        if (!voterPile[sock.id]) {
-            // To address a previous issue when a socket is deleted twice and already gone from voterPile:
-            // -> could not read property 'vote' of undefined
-            recountVotes();
-            console.error('\033[31;1m' + `Voter ${sock.id} has already been deleted from voterPile!\n${printVotes()}` + '\033[0m');
-            return;
+        if (voterSocks[sock.id]) {
+            voterSocks[sock.id] = undefined;
+            IdMgr.idDisconnect(sock); // Delete ID-IP linkage // No delete data; cookie data persistence until next server runtime!
+            // Log
+            var voterID = IdMgr.getId(sock.handshake.address);
+            console.log(`Voter ${sock.handshake.address} ${voterID} is disconnected`);
         }
-        // Delete that socket
-        delete voterPile[sock.id];
-        // Then recount
-        recountVotes();
-        // Update displays
-        displays.emit('update-votes', team1Votes, team2Votes);
-        // Log
-        console.log(`Voter ${sock.id} is disconnected\n${printVotes()}`);
     });
     // Log
-    console.log(`Voter ${sock.id} is connected`);
+    console.log(`Voter ${sock.handshake.address} is connected`);
 });
 
 // Process displays (namespace)

@@ -1,6 +1,7 @@
 import io from '../../node_modules/socket.io-client/dist/socket.io';
 
 import URL_VARS from './urlvars';
+import { getCookie, setCookie } from './cookiemgr';
 
 import './css/voter.css';
 import './css/display.css';
@@ -21,12 +22,12 @@ else {
     };
 }
 
-/* ******************************* *\
-|*              Voter              *|
-\* ******************************* */
+// MARK: Voter
 
 let btn1, btn2, text, subm, form;
 let btnPaused = false, txtPaused = false;
+
+let voterID, voterLastConnect;
 
 var pauseButtons = function () {
     btn1.disabled = btn2.disabled = true;
@@ -48,7 +49,7 @@ var unpauseComment = function () {
 var leaveComment = function (e) {
     e.preventDefault();
     if (txtPaused) return;
-    sock.emit('comment', text.value);
+    sock.emit('comment', voterID, text.value);
     text.value = '';
     text.m_resize();
     pauseComment();
@@ -61,7 +62,7 @@ var commentTextEnterDetection = function (e) {
             text.m_resize();
             leaveComment(e);
         }, 1);
-}
+};
 
 var initVoterCommentAutoresize = function () {
     text.m_resize = function () {
@@ -100,34 +101,55 @@ var initVoterButtons = function () {
 
     btn1.onclick = () => {
         if (btnPaused) return;
-        sock.emit('select', -1);
+        sock.emit('select', voterID, -1);
         pauseButtons();
     };
     btn2.onclick = () => {
         if (btnPaused) return;
-        sock.emit('select', 1);
+        sock.emit('select', voterID, 1);
         pauseButtons();
     };
 };
 
+var recoverVoterID = function () {
+    voterID = getCookie("voter-id");
+    voterLastConnect = getCookie("last-connect");
+    voterLastConnect = voterLastConnect ? Number(voterLastConnect) : -1;
+};
+
+var updateVoterID = function () { // Lasts 10 years
+    setCookie('voter-id', voterID, 3650);
+    setCookie('last-connect', voterLastConnect, 3650);
+};
+
 var initVoter = function () {
+    // Attempt to recover voter ID from last session
+    recoverVoterID();
+    // Initialize socket object; no better ways
     sock = io('/voters');
+    // Design of stability
+    // Enable the developer/manager to cut off connections when a change to the server must be made
     sock.on('disconnect', () => {
         pauseButtons();
         pauseComment();
     });
+    // Handshake-like protocol
+    // ID request
     sock.on('connect', () => {
-        sock.emit('ready-to-send');
+        sock.emit('ready-to-send', voterID, voterLastConnect);
     });
-    sock.on('ready-to-receive', () => {
-        if (btn1.classList.contains('selected'))
-            sock.emit('select', -1);
-        else if (btn2.classList.contains('selected'))
-            sock.emit('select', 1);
-        else
-            sock.emit('select', 0);
-        unpauseComment();
+    // Handshake part 3, recover choices
+    // TODO: let server help to recover choices instead
+    sock.on('ready-to-receive', (newID, thisConnect) => {
+        [voterID, voterLastConnect] = [newID, thisConnect]; // ES6 mass assignment
+        updateVoterID();
+        unpauseComment(); // Choices remain paused until selection is confirmed by server. This whole part might change in the future.
     });
+    sock.on('ip-or-id-rejected', () => {
+        // Redirect; shouldn't mind this anymore // TODO: a reject.html
+        location.pathname = 'reject.html';
+    });
+    // Selection handshake part 2
     sock.on('confirm-selection', (side) => {
         switch (side) {
             case 0:
@@ -145,6 +167,7 @@ var initVoter = function () {
         }
         unpauseButtons();
     });
+    // Comment handshake part 2
     sock.on('confirm-comment', (txt) => {
         unpauseComment();
     });
@@ -154,20 +177,20 @@ var initVoter = function () {
 
     pauseButtons();
     pauseComment();
-}
+};
 
 // Use sock.on('confirm-selection') to call these
 var chooseTeam1 = function () {
     btn1.classList.add('selected');
     btn1.onclick = () => {
         if (btnPaused) return;
-        sock.emit('select', URL_VARS.old ? 0 : -1);
+        sock.emit('select', voterID, URL_VARS.old ? 0 : -1);
         pauseButtons();
     };
     btn2.classList.remove('selected');
     btn2.onclick = () => {
         if (btnPaused) return;
-        sock.emit('select', 1);
+        sock.emit('select', voterID, 1);
         pauseButtons();
     };
 };
@@ -175,13 +198,13 @@ var chooseTeam2 = function () {
     btn1.classList.remove('selected');
     btn1.onclick = () => {
         if (btnPaused) return;
-        sock.emit('select', -1);
+        sock.emit('select', voterID, -1);
         pauseButtons();
     };
     btn2.classList.add('selected');
     btn2.onclick = () => {
         if (btnPaused) return;
-        sock.emit('select', URL_VARS.old ? 0 : 1);
+        sock.emit('select', voterID, URL_VARS.old ? 0 : 1);
         pauseButtons();
     };
 };
@@ -189,20 +212,18 @@ var deselect = function () {
     btn1.classList.remove('selected');
     btn1.onclick = () => {
         if (btnPaused) return;
-        sock.emit('select', -1);
+        sock.emit('select', voterID, -1);
         pauseButtons();
     };
     btn2.classList.remove('selected');
     btn2.onclick = () => {
         if (btnPaused) return;
-        sock.emit('select', 1);
+        sock.emit('select', voterID, 1);
         pauseButtons();
     };
 };
 
-/* ********************************* *\
-|*              Display              *|
-\* ********************************* */
+// MARK: Display
 
 let title, hScore, lScore, rScore, comments;
 var initDisplay = function () {
@@ -266,13 +287,18 @@ var initDisplay = function () {
             p.innerText = txt;
             this.commentArea.prepend(p);
         },
-        deleteOldComments: function () {
-            var plst = this.commentArea.childNodes;
-            while (this.displayContainer.scrollHeight > this.idealContainer.scrollHeight)
-                this.commentArea.removeChild(plst[plst.length - 1]); // Pop from back
-        },
     };
-    comments.deleteInterval = window.setInterval(comments.deleteOldComments, 20); // More stable deletion, doesn't crash in css animation
+    var deleteOldComments = function () {
+        var plst = comments.commentArea.childNodes;
+        var removed = 0;
+        while (comments.displayContainer.scrollHeight > comments.idealContainer.scrollHeight) {
+            comments.commentArea.removeChild(plst[plst.length - 1]); // Pop from back
+            removed++;
+        }
+        removed && console.log(`Removed ${removed} comments`);
+    };
+    comments.deleteInterval = window.setInterval(deleteOldComments, 20); // More stable deletion, doesn't crash in css animation
+    console.log(comments.deleteInterval);
     sock = io('/displays');
     sock.on('connect', () => {
         sock.emit('request-update');
@@ -299,9 +325,7 @@ var initDisplay = function () {
     pickHV();
 };
 
-/* ******************************** *\
-|*              Onload              *|
-\* ******************************** */
+// MARK: Onload
 
 observe(window, 'load', function () {
     if (document.getElementById('vote-container')) {
