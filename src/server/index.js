@@ -53,6 +53,21 @@ const voters = io.of('/voters');
 let voterPile = {}; // Store sockets and votes
 let voterSocks = {}; // Which socket.id's are real voters
 
+// const commentDensityThreshold = 0.25;
+// const commentDensityTolerance = 0.995;
+// const commentDensityPenaltyRate = 25;
+// var blockComment = function (comment) { // antispam
+//     comment.lastpass = comment.pass;
+//     var timestamp = (new Date()).valueOf() / 1000; // ms to s
+//     var timediff = (timestamp - comment.last);
+//     comment.density = comment.density * commentDensityTolerance + (1 - commentDensityTolerance) / timediff;
+//     comment.density = Math.min(comment.density, commentDensityThreshold);
+//     comment.pass = !(comment.density >= commentDensityThreshold && timediff < commentDensityPenaltyRate / comment.lastdiff);
+//     comment.lastdiff = timediff;
+//     comment.last = timestamp;
+//     return !comment.pass;
+// };
+
 voters.on('connection', (sock) => {
     sock.on('ready-to-send', (voterID, prevConnect) => {
         voterID = IdMgr.idConnect(sock, voterID, prevConnect);
@@ -60,7 +75,13 @@ voters.on('connection', (sock) => {
             if (!voterPile[voterID]) // Create if non-existing
                 voterPile[voterID] = { // Now accessed with voter ID
                     vote: 0, // 0 is neutral, <0 is team 1, >0 is team2
-                    recentCommentTimestamp: [], // series of Date valueOf values // TODO: block spam comments
+                    // comment: {
+                    //     last: -1,
+                    //     lastdiff: 1e7,
+                    //     density: 0,
+                    //     pass: true,
+                    //     lastpass: true,
+                    // },
                 };
             sock.emit('ready-to-receive', voterID, IdMgr.THIS_RUN_TIME); // Pass back new voter ID // TODO: accept new voter ID in client
             sock.emit('confirm-selection', voterPile[voterID].vote);

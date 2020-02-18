@@ -13,7 +13,7 @@ var idConnect = function (sock, voterID, prevConnect) {
         console.dir(ip2id);
         return -2;
     }
-    if (prevConnect < THIS_RUN_TIME) {
+    if (prevConnect < THIS_RUN_TIME || isNaN(voterID) || Number(voterID) > idTot) {
         // The ID is from the last session
         voterID = String(++idTot); // Start from 1
         prevConnect = THIS_RUN_TIME;
