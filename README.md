@@ -1,3 +1,3 @@
 # Voter 1
 
-A voter dedicated to a student government activity.
+A real-time vote counter dedicated to a student government activity.
