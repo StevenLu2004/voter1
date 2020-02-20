@@ -45,5 +45,34 @@
                 </tbody>
             </table>
         </form>
+        <form action="/banIp" method="POST" enctype="multipart/form-data">
+            <table>
+                <tbody>
+                    <tr style="display: flex; flex-direction: row;">
+                        <td>Token: </td>
+                        <td style="flex: 1;">
+                            <input type="text" name="token" style="width: 100%;" />
+                        </td>
+                    </tr>
+                    <tr style="display: flex; flex-direction: row;">
+                        <td>Toggle ban: </td>
+                        <td style="flex: 1;">
+                            <input type="text" name="ip" style="width: 100%;" />
+                        </td>
+                    </tr>
+                    <tr style="display: flex; flex-direction: row;">
+                        <td colspan="2" style="flex: 1;">
+                            <input type="checkbox" name="id" />
+                            <label for="id">Use ID?</label>
+                        </td>
+                    </tr>
+                    <tr style="display: flex; flex-direction: row;">
+                        <td colspan="2" style="flex: 1;">
+                            <input type="submit" value="Proceed" style="width: 100%;" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
     </body>
 </html>

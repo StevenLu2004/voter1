@@ -18,18 +18,20 @@ if (typeof (String.prototype.trim) === "undefined") {
 }
 
 var fixText = function (text, sock = null) {
+    var announcement = false;
     // Trim text
     text = text.trim();
     // Tackle long comments
     if (text.length > 400) {
         text = `${sock ? sock.handshake.address : 'ERR_USER_ID'} commented ${text.length} characters`;
+        announcement = true;
         // console.dir(sock.handshake.address);
     }
     // Remove bad words
     for (var i = 0; i < wordBlackList.length; i++) {
         text = text.replace(wordBlackList[i][0], wordBlackList[i][1]);
     }
-    return text;
+    return [text, announcement];
 };
 
 module.exports = {

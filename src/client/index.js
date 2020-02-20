@@ -281,10 +281,11 @@ var initDisplay = function () {
         idealContainer: document.getElementById('ideal-container'),
         displayContainer: document.getElementById('display-container'),
         commentArea: document.getElementById('comment-area'),
-        addComment: function (txt) {
+        addComment: function (txt, announcement) {
             if (!txt) return;
             var p = document.createElement('p');
             p.innerText = txt;
+            if (announcement) p.style['color'] = 'red';
             this.commentArea.prepend(p);
         },
     };
@@ -309,7 +310,7 @@ var initDisplay = function () {
         lScore.updateScore(t1sc, t2sc);
         rScore.updateScore(t1sc, t2sc);
     });
-    sock.on('add-comment', (txt) => comments.addComment(txt));
+    sock.on('add-comment', (txt, announcement) => comments.addComment(txt, announcement));
     var pickHV = () => {
         if (window.innerWidth < 700) {
             document.getElementById("h-scoreboard").style.display = "flex";
