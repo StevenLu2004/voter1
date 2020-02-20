@@ -4,6 +4,43 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width; initial-scale=1.0" />
         <title>Info</title>
+        <style>
+            form {
+                display: block;
+                width: fit-content;
+                margin: auto;
+                font-family: Arial, Helvetica, sans-serif;
+                line-height: 2em;
+                text-align: center;
+            }
+            input {
+                font-size: inherit;
+                outline: none;
+            }
+            button, input[type=button], input[type=submit] {
+                border: none;
+                background-color: rgb(165, 255, 205);
+                margin: 0;
+            }
+            button:active, input[type=button]:active, input[type=submit]:active {
+                border: none;
+                background-color: rgb(149, 231, 186);
+                margin: 0;
+            }
+            input[type=text] {
+                width: 100%;
+                border: none;
+                border-radius: 0;
+                border-bottom: 2px solid rgb(0, 161, 100);
+            }
+            input[type=text]:focus {
+                border: none;
+                border-radius: 0;
+                border-bottom: 2px solid rgb(0, 219, 135);
+                background-color: #000;
+                color: white;
+            }
+        </style>
     </head>
     <body>
         <form action="/genToken" method="POST">
@@ -16,30 +53,30 @@
                     <tr style="display: flex; flex-direction: row;">
                         <td>Token: </td>
                         <td style="flex: 1;">
-                            <input type="text" name="token" style="width: 100%;" />
+                            <input type="text" name="token" />
                         </td>
                     </tr>
                     <tr style="display: flex; flex-direction: row;">
                         <td>Prompt: </td>
                         <td style="flex: 1;">
-                            <input type="text" name="prompt" value="To be or not to be" style="width: 100%;" />
+                            <input type="text" name="prompt" placeholder="To be or not to be" />
                         </td>
                     </tr>
                     <tr style="display: flex; flex-direction: row;">
                         <td>Team 1: </td>
                         <td style="flex: 1;">
-                            <input type="text" name="t1ttl" value="To be" style="width: 100%;" />
+                            <input type="text" name="t1ttl" placeholder="To be" />
                         </td>
                     </tr>
                     <tr style="display: flex; flex-direction: row;">
                         <td>Team 2: </td>
                         <td style="flex: 1;">
-                            <input type="text" name="t2ttl" value="Not to be" style="width: 100%;" />
+                            <input type="text" name="t2ttl" placeholder="Not to be" />
                         </td>
                     </tr>
                     <tr style="display: flex; flex-direction: row;">
                         <td colspan="2" style="flex: 1;">
-                            <input type="submit" value="Set" style="width: 100%;" />
+                            <input type="submit" value="Set" />
                         </td>
                     </tr>
                 </tbody>
@@ -51,13 +88,13 @@
                     <tr style="display: flex; flex-direction: row;">
                         <td>Token: </td>
                         <td style="flex: 1;">
-                            <input type="text" name="token" style="width: 100%;" />
+                            <input type="text" name="token" />
                         </td>
                     </tr>
                     <tr style="display: flex; flex-direction: row;">
                         <td>Toggle ban: </td>
                         <td style="flex: 1;">
-                            <input type="text" name="ip" style="width: 100%;" />
+                            <input type="text" name="ip" />
                         </td>
                     </tr>
                     <tr style="display: flex; flex-direction: row;">
@@ -68,7 +105,7 @@
                     </tr>
                     <tr style="display: flex; flex-direction: row;">
                         <td colspan="2" style="flex: 1;">
-                            <input type="submit" value="Proceed" style="width: 100%;" />
+                            <input type="submit" value="Proceed" />
                         </td>
                     </tr>
                 </tbody>
