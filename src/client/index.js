@@ -285,7 +285,8 @@ var initDisplay = function () {
             if (!txt) return;
             var p = document.createElement('p');
             p.innerText = txt;
-            if (announcement) p.style['color'] = 'red';
+            if (announcement) p.style.color = 'red';
+            else p.style.fontFamily = "'Comic Sans MS', 'Comic Sans', Arial, Helvetica, sans-serif";
             this.commentArea.prepend(p);
         },
     };
